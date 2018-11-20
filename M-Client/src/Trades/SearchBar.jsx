@@ -3,6 +3,40 @@ import { withRouter } from 'react-router-dom';
 
 class SearchBar extends Component {
 
+   constructor(props) {
+        super(props);
+        this.reloadd = this.reloadd.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+   handleSubmit = (e) => {
+        e.preventDefault();
+        let sTrade = {
+            commodity: this.refs.name.value,
+            side: this.refs.side.value,
+            counterparty: this.refs.counterparty.value,
+            location: this.refs.location.value,
+            fdate: this.refs.fromdate.value,
+            tdate: this.refs.todate.value
+        }
+        this.props.store.filterTrades(sTrade);
+        console.log(sTrade);
+        console.log(sTrade.fdate);
+        console.log(typeof (sTrade.tdate));
+        if (sTrade.tdate === "")
+            console.log("null");
+        else
+            console.log("not null");
+        this.props.store.isSearch = true;
+        this.props.store.searchFilter();
+    }
+
+    reloadd(e) {
+        this.preventDefault(e);
+        this.props.store.isSearch = false;
+        window.location.href = '/trades';
+
+    }
    
 
     render() {
