@@ -11,48 +11,53 @@ import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { Provider } from 'mobx-react'
+import { Provider, observer } from 'mobx-react'
 import TradeStore from '../Store/TradeStore'
-import TradeData from '../Actions/TradeData';
+import DevTools from 'mobx-react-devtools';
+import TradeList from './TradeList';
+import TradeFormEdit from './TradeFormEdit';
 
-const httpLink = new HttpLink({ uri: 'http://localhost:2003/graphql' })
-const client = new ApolloClient({
+const httpLink = new HttpLink({ uri: 'http://localhost:2007/graphql' })
+export const client = new ApolloClient({
     link: httpLink,
     cache: new InMemoryCache()
 })
 
 const store = new TradeStore();
 
+@observer
 class Trades extends Component {
     render() {
         return (
-                <ApolloProvider client={client}>
-                    <Provider store={store} >
-                        <div className="container">
-                            <Router>
+            <ApolloProvider client={client}>
+                <Provider store={store} >
+                    <div className="container">
+                        <Router>
+                            <div className="">
                                 <div className="">
-                                    <div className="">
-                                        <SearchBar />
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-8">
-                                            <TradeData store={store} />
-                                        </div>
-                                        <div className="col-sm-4">
-                                            <div className="col-sm-12 col-md-12">
-                                                <Route path="/home" component={PlainHome} />
-                                                <Route path="/tradeform" component={TradeForm} />
-
-                                                {/* <Route path="/edit-trade/:idd/:commodity/:side/:quantity/:price/:counterparty/:location" component={TradeFormEdit} /> */}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <SearchBar store={store} />
+                                    <DevTools />
                                 </div>
-                            </Router>
-                        </div>
-                    </Provider>
-                </ApolloProvider>
+                                <hr />
+                                <div className="row">
+                                    <div className="col-xs-15">
+                                        <TradeList store={store} />
+                                    </div>
+                                    <div className="col-xs-3">
+                                        <div className="col-sm-3 col-md-3">
+                                            <Route path="/home" component={PlainHome} />
+                                           
+                                        </div>
+                                    </div>
+                                  
+                                    <Route path="/tradeform" component={TradeForm} />
+                                            <Route path="/edit-trade/:id/:commodity/:side/:quantity/:price/:counterparty/:location" component={TradeFormEdit} />
+                                </div>
+                            </div>
+                        </Router>
+                    </div>
+                </Provider>
+            </ApolloProvider >
         );
     }
 }

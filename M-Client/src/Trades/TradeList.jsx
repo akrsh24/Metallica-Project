@@ -3,9 +3,10 @@ import {
     Link,
     withRouter
 } from 'react-router-dom'
-import { observer } from '../../node_modules/mobx-react';
+import { observer } from 'mobx-react';
 import * as Query from '../Queries/Query';
 import { graphql } from '../../node_modules/react-apollo';
+import moment from 'moment';
 
 const deleteTrade = Query.deleteTrade
 
@@ -18,36 +19,45 @@ class TradeList extends Component {
         this.deleteItem = this.deleteItem.bind(this);
     }
 
-    deleteItem (id) {
+    componentWillMount() {
+        this.props.store.searchAll();
+    }
+
+    deleteItem(id) {
+
         console.log(id);
+
         this.props.deletemutation({
             variables: {
-                idd: id
+                id: id
             }
         })
             .then(({ data }) => {
                 console.log("Trade is deleted", data);
-                this.props.store.count--;
                 alert('Trade is deleted');
             })
     }
 
+    trades = [];
+
+
     renderTrades() {
-        return this.props.store.trades.map((trade) => {
-            return (
-                <tr key={trade.idd}>
-                    <td>{trade.commodity}</td>
-                    <td>{trade.side}</td>
-                    <td>{trade.quantity}</td>
-                    <td>{trade.price}</td>
-                    <td>{trade.counterparty}</td>
-                    <td>{trade.location}</td>
-                    {/* <td><Link to={`edit - trade / ${ trade.idd } /${trade.commodity}/${ trade.side } /${trade.quantity}/${ trade.price } /${trade.counterparty}/${ trade.location } `}><i className="fa fa-edit"></i></Link></td> */}
-                    <td><a href="/" onClick={() => this.deleteItem(trade.idd)}><i className="fa fa-trash"></i></a></td>
-                </tr>
-            );
-        });
-        window.location.reload();
+        if (this.props.store.isSearch === false ? this.trades = this.props.store.allTrades : this.trades = this.props.store.searchTrades)
+            return this.trades.map((trade) => {
+                return (
+                    <tr key={trade.id}>
+                        <td> {moment(trade.tdate).format(" MM/DD/YYYY ")}</td>
+                        <td>{trade.commodity}</td>
+                        <td>{trade.side}</td>
+                        <td>{trade.quantity}</td>
+                        <td>${trade.price}</td>
+                        <td>{trade.counterparty}</td>
+                        <td>{trade.location}</td>
+                        <td><Link to={`edit-trade/${trade.id}/${trade.commodity}/${trade.side}/${trade.quantity}/${trade.price}/${trade.counterparty}/${trade.location} `}><i className="fa fa-edit"></i></Link></td>
+                        <td><a href="/trades" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(trade.id) }} ><i className="fa fa-trash"></i></a></td>
+                    </tr>
+                );
+            });
     }
     render() {
         return (
@@ -57,10 +67,11 @@ class TradeList extends Component {
                 </div>
 
                 <div className="card-body">
-                    <table className="table table-hover table-sm-col-md-8">
+                    <table className="table table-hover table-sm-col-md-10">
+                        <th scope="col">Date</th>
                         <th scope="col">Commodity</th>
                         <th scope="col">Side</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Qty</th>
                         <th scope="col">Price</th>
                         <th scope="col">Counterparty</th>
                         <th scope="col">Location</th>
@@ -73,6 +84,7 @@ class TradeList extends Component {
         );
     }
 }
+
 
 const tradeList = graphql(deleteTrade, { name: 'deletemutation' })(TradeList)
 export default withRouter(tradeList);

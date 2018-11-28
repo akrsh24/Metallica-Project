@@ -5,7 +5,8 @@ import gql from 'graphql-tag'
 export const tradeList = gql`
             query {
                 trades{
-                            idd
+                            id
+                            tdate
                             commodity
                             side
                             quantity
@@ -19,6 +20,7 @@ export const addTrade = gql`
            mutation createTrade($input:TradeInputType !){
                 createTrade(input:$input){
                         commodity
+                        tdate
                         side
                         counterparty
                         price
@@ -29,9 +31,10 @@ export const addTrade = gql`
 `;
 
 export const deleteTrade = gql`
-           mutation deleteTrade($idd:String!){
-                deleteTrade(idd:$idd){
-                        idd
+           mutation deleteTrade($id:Int!){
+                deleteTrade(id:$id){
+                        id
+                        tdate
                         commodity
                         side
                         counterparty
@@ -42,5 +45,32 @@ export const deleteTrade = gql`
            }
 `;
 
+export const searchQuery = gql`
+         query searchTrades($input:SearchInputType!){
+                searchTrades (input:$input){
+                        commodity
+                        tdate
+                        side
+                        counterparty
+                        price
+                        quantity
+                        location  
+                 } 
+         }
+`;
 
+export const updateTrade = gql`
+      mutation updateTrade($input:UpdateInputType!){
+        updateTrade(input:$input){
+                        id
+                        tdate
+                        commodity
+                        side
+                        counterparty
+                        price
+                        quantity
+                        location
+        }
+      }
+`
 

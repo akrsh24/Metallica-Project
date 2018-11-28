@@ -12,6 +12,11 @@ import MainHome from './MainHome';
 
 class Home extends Component {
     render() {
+        const style = {
+            'float': 'right',
+            ' margin-left': '10em',
+            'margin-right':'10px'
+        };
         return (
             <Router>
                 <div>
@@ -32,7 +37,7 @@ class Home extends Component {
                                     <Link className="nav-link" id="transports-tab" data-toggle="tab" to='' role="tab" aria-controls="transports" aria-selected="false">TRANSPORTS</Link>
                                 </li>
                             </ul>
-                            <img src="./images/avatar2.png" alt="Avatar" className="avatar" />
+                           
 
                             <div className="tab-content" id="myTabContent">
                                 <div className="tab-pane fade " id="trades" role="tabpanel" aria-labelledby="trades-tab"></div>
@@ -40,14 +45,17 @@ class Home extends Component {
                                 <div className="tab-pane fade" id="transports" role="tabpanel" aria-labelledby="transports-tab"></div>
                             </div>
                         </div>
+                        
+                        <img src="./images/akarsh.jpg" alt="Avatar" className="avatar" style={style} />
                     </nav>
+                   
                     <hr />
                     <div className="container" style={{ 'marginTop': '2%' }}>
                         <div className="well">
                             <div>
                                 <Route exact path="/" component={MainHome} />
                                 <Route path="/trades" component={Trades} />
-                                
+
                             </div>
                         </div>
                     </div>

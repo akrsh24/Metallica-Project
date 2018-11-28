@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { observer } from '../../node_modules/mobx-react';
 
+@observer
 class SearchBar extends Component {
 
-   constructor(props) {
+    constructor(props) {
         super(props);
         this.reloadd = this.reloadd.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-   handleSubmit = (e) => {
+
+
+    handleSubmit = (e) => {
         e.preventDefault();
         let sTrade = {
             commodity: this.refs.name.value,
@@ -37,7 +40,6 @@ class SearchBar extends Component {
         window.location.href = '/trades';
 
     }
-   
 
     render() {
         return (
@@ -48,73 +50,69 @@ class SearchBar extends Component {
                             <div className="">
                                 <div className="">
 
-                                    <form onSubmit={(e) => this.handleSubmit(e)}>
+                                    <form >
                                         <div class="form-row">
                                             <div class="col-2">
-                                                <input id="date" type="date" ref="fromdate" class="form-control" />
+                                                <input id="date" type="date" ref="fromdate" class="form-control"
+                                                    min="1900-01-01" max="3000-12-31" />
                                             </div>&nbsp;
                                             <h2>
                                                 <i class="fa fa-long-arrow-right" aria-hidden="true"></i></h2> &nbsp;
                                             <div class="">
-                                                <input id="date" type="date" ref="todate" class="form-control" />
+                                                <input id="date" type="date" ref="todate" class="form-control"
+                                                    min="1900-01-01" max="3000-12-31" />
                                             </div>
                                             <div class="col">
                                                 <select ref="name" className="form-control"  >
-                                                    <option value="null" disabled selected> Commodity</option>
-                                                    <option value="Copper">Copper</option>
-                                                    <option value="Gold"> Gold</option>
-                                                    <option value="Platinum">Platinum</option>
-                                                    <option value="Rubber"> Rubber</option>
-                                                    <option value="Wool"> Wool</option>
-                                                    <option value="Corn"> Corn</option>
-                                                    <option value="Wheat"> Wheat</option>
-                                                    <option value="Milk"> Milk</option>
-                                                    <option value="Tin"> Tin</option>
+                                                    <option value="all" selected> Commodity</option>
+                                                    <option value="AL">Aluminium</option>
+                                                    <option value="ZN">Zinc</option>
+                                                    <option value="CU">Copper</option>
+                                                    <option value="PB">Lead</option>
+                                                    <option value="AG">Silver</option>
+                                                    <option value="AU">Gold</option>
+                                                    <option value="PT">Platinum</option>
+                                                    <option value="FE">Iron</option>
+
+
                                                 </select>
                                             </div>
                                             <div class="col">
 
                                                 <select ref="side" className="form-control" >
-                                                    <option value="null" disabled selected> Side</option>
+                                                    <option value="all" selected> Side</option>
                                                     <option value="Buy"> Buy</option>
                                                     <option value="Sell"> Sell</option>
                                                 </select>
-                                                {/* &nbsp;
-                                            <input type="radio" name="side" value="Buy" ref="side" className="form-control"/>Buy &nbsp;
-                                            <input type="radio" name="side" value="Sell" ref="side" className="form-control"/>Sell 
-                                            
-                                            <br/> */}
+
                                             </div>
                                             <div class="col">
                                                 <select ref="counterparty" className="form-control" >
-                                                    <option value="null" disabled selected> Counterparty</option>
-                                                    <option value="Rebecca"> Rebecca</option>
-                                                    <option value="Jorawar"> Jorawar</option>
-                                                    <option value="Mohana"> Mohana</option>
-                                                    <option value="Abhishek"> Abhishek</option>
-                                                    <option value="Raghav"> Raghav</option>
-                                                    <option value="Sumukh"> Sumukh</option>
-                                                    <option value="Sweta"> Sweta</option>
-                                                    <option value="Akarsh"> Akarsh</option>
-                                                    <option value="Bhargo"> Bhargo</option>
-
+                                                    <option value="all" selected> Counterparty</option>
+                                                    <option value="Akarsh">Akarsh</option>
+                                                    <option value="Anushka">Anushka</option>
+                                                    <option value="Anchal">Anchal</option>
+                                                    <option value="Aditya">Aditya</option>
+                                                    <option value="Arpit">Arpit</option>
+                                                    <option value="Ahsaan">Ahsaan</option>
+                                                    <option value="Apoorv">Apoorv</option>
                                                 </select>
                                             </div>
                                             <div class="col">
                                                 <select ref="location" className="form-control"  >
-                                                    <option value="null" disabled selected>Location</option>>
-                                                    <option value="India"> India</option>
-                                                    <option value="US"> US</option>
-                                                    <option value="China"> China</option>
-                                                    <option value="England"> England</option>
-                                                    <option value="France"> France</option>
-                                                    <option value="Mexico"> Mexico</option>
-                                                    <option value="Bangladesh"> Bangladesh</option>
-                                                    <option value="Pakistan"> Pakistan</option>
-                                                    <option value="Syria"> Syria</option>
-                                                </select>                                            </div>
-                                            &nbsp;<button className="btn float-right"><i class="fa fa-search" aria-hidden="true"></i></button> &nbsp; &nbsp;
-                                            <button onClick={this.reloadd} className="btn float-right" overrides={{ Color: "red" }}><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                                                    <option value="all" selected>Location</option>
+                                                    <option value="ARG">Argentina</option>
+                                                    <option value="LON">London</option>
+                                                    <option value="NYC">New York</option>
+                                                    <option value="LA">Los Angeles</option>
+                                                    <option value="AUS">Australia</option>
+                                                    <option value="IND">India</option>
+                                                    <option value="TOK">Tokyo</option>
+                                                </select>
+                                            </div>
+                                            &nbsp;
+                                            <button className="btn float-right"><i class="fa fa-search" aria-hidden="true" onClick={this.handleSubmit}></i></button> &nbsp; &nbsp;
+                                            <button onClick={this.reloadd} className="btn float-right" overrides={{ Color: "red" }}><i class="fa fa-ban" aria-hidden="true"></i></button>
                                         </div>
                                     </form>
                                 </div>
@@ -127,4 +125,4 @@ class SearchBar extends Component {
     }
 }
 
-export default withRouter(SearchBar);
+export default SearchBar;

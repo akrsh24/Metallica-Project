@@ -1,11 +1,13 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose')
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 var schema = mongoose.Schema;
 
 var tradeSchema = new schema({
-    idd: {
-        type: Number,
-        required: true
+    
+    tdate: {
+        type: Date,
+        required: true,
     },
     commodity: {
         type: String,
@@ -32,5 +34,7 @@ var tradeSchema = new schema({
         required: false
     }
 });
+
+tradeSchema.plugin(AutoIncrement, {inc_field: 'id'});
 var Model = mongoose.model('Trade', tradeSchema);
 export default Model;

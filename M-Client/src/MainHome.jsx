@@ -5,12 +5,10 @@ class MainHome extends Component {
     render() {
         return (
             <div>
-                <div class="jumbotron jumbotron-fluid">
-                    <div class="container">
-                        <h1 class="display-4">Metallica</h1>
-                    </div>
+                <div class="jumbotron">
+                    <h1 class="display-4">Metallica</h1>
                 </div>
-                <hr className="my-4" />
+                <hr class="my-4" />
             </div>
         );
     }

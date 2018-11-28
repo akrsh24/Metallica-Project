@@ -6,7 +6,9 @@ import {
 import {
   tradeQueries,
   tradeMutations,
-  deleteMutations
+  deleteMutations,
+  searchQuery,
+  updateMutations
 } from './trades/trades';
 
 
@@ -15,13 +17,15 @@ export default new GraphQLSchema({
     name: 'Query',
     fields: () => ({
       ...tradeQueries,
+      ...searchQuery
     }),
   }),
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
       ...tradeMutations,
-      ...deleteMutations
+      ...deleteMutations,
+      ...updateMutations
     }),
   }),
 });

@@ -24,8 +24,11 @@
     "express-graphql": "^0.6.6",
     "faker": "^4.1.0",
     "graphql": "^0.10.3",
+    "graphql-date": "^1.0.3",
     "graphql-tools": "^0.10.1",
-    "mongoose": "^5.2.2",
+    "mongoose": "^5.2.4",
+    "mongoose-auto-increment": "^5.0.1",
+    "mongoose-sequence": "^4.0.1",
     "validator": "^8.0.0"
   },
   "devDependencies": {

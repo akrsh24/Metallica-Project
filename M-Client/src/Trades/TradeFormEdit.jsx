@@ -1,57 +1,52 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react'
-import "font-awesome/css/font-awesome.css"
+
 import {
     Link,
-    withRouter
+    withRouter,
 } from "react-router-dom";
-import { graphql } from 'react-apollo';
 
-import * as Query from '../Queries/Query';
-
-const addTrade = Query.addTrade;
 
 @inject('store')
 @observer
-class TradeForm extends Component {
-
+class TradeFormEdit extends Component {
 
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.saveEditedTrade = this.handleChange.bind(this);
+    }
 
+    handleChange(e) {
+        this.props.store.handleChange(e.target.name, e.target.value);
     }
 
 
     handleSubmit(e) {
         e.preventDefault();
-        let newTrade = {
-            commodity: this.refs.commodity.value,
-            tdate: this.refs.date.value,
-            side: this.refs.side.value,
-            counterparty: this.refs.counterparty.value,
-            price: this.refs.price.value,
-            quantity: this.refs.quantity.value,
-            location: this.refs.location.value
-        }
-        this.props.store.saveTrade(newTrade);
-        console.log(this.props.store.trade);
-
-        this.props.addmutation({
-            variables: {
-                input: this.props.store.toAddTrade
-            }
-        })
-            .then(({ data }) => {
-                console.log('got data', data);
-                alert('New Trade is added');
-            })
-
-        window.location.href='/trades';
-
+        this.props.store.saveEditedTrade();
+        console.log("Trade is updated");
+        window.location.href = '/trades'
     }
 
+    componentWillMount() {
+        let preState = {
+            id: this.props.match.params.id,
+            commodity: this.props.match.params.commodity,
+            side: this.props.match.params.side,
+            quantity: this.props.match.params.quantity,
+            counterparty: this.props.match.params.counterparty,
+            price: this.props.match.params.price,
+            location: this.props.match.params.location
+        }
+
+        this.props.store.saveRenderTrades(preState);
+    }
+
+
     render() {
+        let trade = this.props.store.toUpdateTrade;
         const style = {
             'padding': '5px',
             'margin-left': '145px',
@@ -64,22 +59,17 @@ class TradeForm extends Component {
                     <div className="col-md-18 ">
                         <div className="card" >
                             <div className="card-header">
-                                <h4>New Trade</h4>
+                                <h4>Trade ID: {trade.id}</h4>
                                 <Link to="/home"><i className="fa fa-trash">Discard</i></Link>&nbsp; &nbsp;
                             </div>
 
                             <div className="card-body">
                                 <div className="">
-                                    <form className="form-horizontal" onSubmit={(e) => this.handleSubmit(e)}>
+                                    <form className="form-horizontal" onSubmit={(e) => { if (window.confirm('Are you sure you wish to edit this item?')) this.handleSubmit(e) }}>
                                         <div className="form-group">
                                             <div className="form-group">
-                                                <label for="date" className="col-sm-4 control-label">Date</label>
-                                                <input id="date" type="date" ref="date" className="col-sm-8 control-label" />
-                                            </div>
-
-                                            <div className="form-group">
                                                 <label for="commodity" className="col-sm-4 control-label">Name</label>
-                                                <select ref="commodity" id="commodity" className="col-sm-8 control-label">
+                                                <select ref="commodity" name="commodity" className="col-sm-8 control-label" onChange={this.handleChange} value={trade.commodity}>
                                                     <option value="AL">Aluminium</option>
                                                     <option value="ZN">Zinc</option>
                                                     <option value="CU">Copper</option>
@@ -94,7 +84,7 @@ class TradeForm extends Component {
 
                                             <div className="form-group">
                                                 <label for="side" className="col-sm-4 control-label">Side</label>
-                                                <select ref="side" id="side" className="col-sm-8 control-label">
+                                                <select ref="side" name="side" className="col-sm-8 control-label" onChange={this.handleChange} value={trade.side}>
                                                     <option value="Buy"> Buy</option>
                                                     <option value="Sell"> Sell</option>
                                                 </select>
@@ -102,17 +92,17 @@ class TradeForm extends Component {
 
                                             <div className="form-group">
                                                 <label for="quantity" className="col-sm-4 control-label">Quantity</label>
-                                                <input ref="quantity" type="number" className="col-sm-8 control-label" id="quantity" required aria-required="true" pattern="[0-9]+" />
+                                                <input ref="quantity" type="number" className="col-sm-8 control-label" name="quantity" onChange={this.handleChange} required aria-required="true" pattern="[0-9]+" value={trade.quantity} />
                                             </div>
 
                                             <div className="form-group">
                                                 <label for="price" className="col-sm-4 control-label">Price</label>
-                                                <input ref="price" type="number" className="col-sm-8 control-label" id="price" required aria-required="true" pattern="[0-9]+" />
+                                                <input ref="price" type="number" className="col-sm-8 control-label" disabled onChange={this.handleChange} name="price" required aria-required="true" pattern="[0-9]+" value={trade.price} />
                                             </div>
 
                                             <div className="form-group">
                                                 <label for="counterparty" className="col-sm-4 control-label">Party</label>
-                                                <select ref="counterparty" id="counterparty" className="col-sm-8 control-label">
+                                                <select ref="counterparty" name="counterparty" onChange={this.handleChange} className="col-sm-8 control-label" value={trade.counterparty}>
                                                     <option value="Akarsh">Akarsh</option>
                                                     <option value="Anushka">Anushka</option>
                                                     <option value="Anchal">Anchal</option>
@@ -125,7 +115,7 @@ class TradeForm extends Component {
 
                                             <div className="form-group">
                                                 <label for="location" className="col-sm-4 control-label">Location</label>
-                                                <select ref="location" id="location" className="col-sm-8 control-label">
+                                                <select ref="location" name="location" className="col-sm-8 control-label" onChange={this.handleChange} value={trade.location}>
                                                     <option value="ARG">Argentina</option>
                                                     <option value="LON">London</option>
                                                     <option value="NYC">New York</option>
@@ -135,7 +125,7 @@ class TradeForm extends Component {
                                                     <option value="TOK">Tokyo</option>
                                                 </select>
                                             </div>
-                                            <button className="btn btn-primary" style={style}>Save</button>
+                                            <button className="btn btn-primary" style={style}>Edit</button>
                                         </div>
                                     </form>
                                 </div>
@@ -148,5 +138,4 @@ class TradeForm extends Component {
     }
 }
 
-const AddTrade = graphql(addTrade, { name: 'addmutation' })(TradeForm)
-export default withRouter(AddTrade);
+export default withRouter(TradeFormEdit);
